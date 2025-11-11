@@ -1,0 +1,148 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: #f0f2f5;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Mengatur tinggi minimum 100% viewport height */
+  padding: 20px;
+}
+
+.form-container {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+/* CSS for when results are displayed */
+.container.results-shown {
+  align-items: flex-start; /* Align to top */
+  padding-top: 40px;
+}
+
+.form-container h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+  word-wrap: break-word;
+}
+
+.form-group label {
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input {
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.btn-custom {
+  background-color: #007bff;
+  color: white;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  padding: 10px;
+  margin-top: 15px;
+}
+
+.btn-custom:hover {
+  background-color: #0056b3;
+  color: white;
+}
+
+.result {
+  margin-top: 20px;
+  padding: 25px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 2px solid #ddd;
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.1);
+  max-height: 400px; /* Limit height for scrolling */
+  overflow: auto;
+}
+
+.result h2 {
+  text-align: center;
+  font-size: 1.6rem;
+  color: #444;
+  margin-bottom: 15px;
+}
+
+.result p {
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  color: #666;
+}
+
+.result .hasil {
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  color: black;
+}
+
+.result p i,
+.result span.result-text {
+  overflow-wrap: break-word;
+}
+
+.result ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.result ul li {
+  margin: 8px 0;
+  padding: 5px 10px;
+  border-left: 4px solid #007bff;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+}
+
+.result ul li strong {
+  color: #333;
+}
+
+.result ul li em {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.phishing {
+  border-color: #ffdddd;
+  background-color: #ffe5e5;
+  color: #d9534f;
+}
+
+.non-phishing {
+  border-color: #d4edda;
+  background-color: #d4edda;
+  color: #28a745;
+}
+
+.result-text {
+  font-weight: bold;
+  color: inherit;
+}
+
+.result .phishing .result-text {
+  color: #d9534f;
+}
+
+.result .non-phishing .result-text {
+  color: #28a745;
+}

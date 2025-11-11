@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phishing URL Classifier</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container{% if result is not none %} results-shown{% endif %}">
+      <div class="form-container">
+        <h1>Identifikasi Website Phishing</h1>
+        <form action="/" method="post">
+          <div class="form-group mt-3">
+            <label for="url">Masukkan URL</label>
+            <input
+              type="text"
+              id="url"
+              name="url"
+              class="form-control"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-custom btn-block">
+            Identifikasi URL
+          </button>
+        </form>
+        {% if result is not none %}
+        <div
+          class="result {{ 'phishing' if result == 'Website ini terindikasi Phishing' else 'non-phishing' }}"
+        >
+          <h2 class="text-center">Hasil Identifikasi</h2>
+          <p class="my-2"><strong>URL:</strong></p>
+          <p class="my-2 hasil"><i>{{ url }}</i></p>
+          <p class="my-2"><strong>Fitur URL:</strong></p>
+          <ul>
+            {% for feature, value in features.items() %}
+            <li>
+              <strong>{{ feature }}:</strong> {{ value }}
+              <p>
+                <small>
+                  {% if feature == 'url' %}
+                  <em>
+                    Hash SHA-256 dari URL yang digunakan untuk membuat
+                    representasi unik dari URL.
+                  </em>
+                  {% elif feature == 'URL_Length' %}
+                  <em>
+                    Panjang URL. URL yang sangat panjang sering digunakan dalam
+                    phishing untuk menyembunyikan niat jahat.
+                  </em>
+                  {% elif feature == 'Shortening_Service' %}
+                  <em>
+                    Apakah URL menggunakan layanan pemendek URL seperti bit.ly.
+                    Layanan ini sering digunakan dalam phishing untuk
+                    menyembunyikan URL asli.
+                  </em>
+                  {% elif feature == 'Having_At_Symbol' %}
+                  <em>
+                    Jumlah simbol '@' dalam URL. Simbol '@' dalam URL bisa
+                    menjadi tanda phishing, sering digunakan untuk mengalihkan
+                    perhatian pengguna.
+                  </em>
+                  {% elif feature == 'Double_slash_redirecting' %}
+                  <em>
+                    Jumlah pengalihan '//'. Pengalihan ganda bisa menunjukkan
+                    niat untuk menipu.
+                  </em>
+                  {% elif feature == 'Prefix_Suffix' %}
+                  <em>
+                    Jumlah tanda '-' dalam URL. Penggunaan tanda '-' yang
+                    berlebihan mungkin menunjukkan URL yang mencurigakan.
+                  </em>
+                  {% elif feature == 'Subdomain_Count' %}
+                  <em>
+                    Jumlah subdomain dalam URL. URL dengan banyak subdomain bisa
+                    jadi berusaha untuk meniru domain yang sah.
+                  </em>
+                  {% elif feature == 'HTTPS_token' %}
+                  <em>
+                    Apakah URL menggunakan HTTPS (1 jika ya, 0 jika tidak).
+                    HTTPS umumnya lebih aman, tetapi tidak menjamin keamanan
+                    sepenuhnya.
+                  </em>
+                  {% elif feature == 'Number_of_Dots' %}
+                  <em>
+                    Jumlah titik dalam domain. Domain dengan banyak titik
+                    mungkin menunjukkan niat phishing.
+                  </em>
+                  {% elif feature == 'Length_of_Domain' %}
+                  <em>
+                    Panjang nama domain. Domain yang sangat panjang bisa jadi
+                    mencurigakan.
+                  </em>
+                  {% elif feature == 'Number_of_Digits' %}
+                  <em>
+                    Jumlah digit dalam URL. Penggunaan angka dalam URL mungkin
+                    menunjukkan penipuan.
+                  </em>
+                  {% elif feature == 'Number_of_Underscores' %}
+                  <em>
+                    Jumlah garis bawah dalam URL. Penggunaan garis bawah dalam
+                    URL bisa jadi tidak biasa dan mencurigakan.
+                  </em>
+                  {% elif feature == 'Number_of_Special_Characters' %}
+                  <em>
+                    Jumlah karakter khusus dalam URL. Karakter khusus yang
+                    berlebihan bisa jadi tanda phishing.
+                  </em>
+                  {% elif feature == 'Number_of_Letters' %}
+                  <em>
+                    Jumlah huruf dalam URL. Banyak huruf bisa jadi tanda URL
+                    yang tidak mencurigakan.
+                  </em>
+                  {% elif feature == 'Query_Length' %}
+                  <em>
+                    Panjang query URL. Query yang panjang bisa jadi tanda
+                    aktivitas mencurigakan.
+                  </em>
+                  {% elif feature == 'Hostname_Length' %}
+                  <em>
+                    Panjang hostname dalam URL. Hostname yang sangat panjang
+                    bisa jadi mencurigakan.
+                  </em>
+                  {% elif feature == 'Length_of_Top_Level_Domain' %}
+                  <em>
+                    Panjang domain tingkat atas (TLD). TLD yang tidak umum bisa
+                    jadi mencurigakan.
+                  </em>
+                  {% elif feature == 'Path_Depth' %}
+                  <em>
+                    Kedalaman jalur URL. Jalur yang dalam bisa jadi tanda URL
+                    phishing yang mencoba menyembunyikan niat jahat.
+                  </em>
+                  {% elif feature == 'Entropy_of_URL' %}
+                  <em>
+                    Entropi URL. Entropi tinggi bisa menunjukkan URL yang acak
+                    dan tidak biasa.
+                  </em>
+                  {% elif feature == 'URL_Contains_IP_Address' %}
+                  <em>
+                    Apakah URL mengandung alamat IP. Alamat IP dalam URL sering
+                    digunakan untuk phishing.
+                  </em>
+                  {% elif feature == 'URL_Contains_Encoded_Characters' %}
+                  <em>
+                    Apakah URL mengandung karakter yang terkodekan seperti '%'.
+                    Karakter terkodekan bisa jadi tanda URL yang mencurigakan.
+                  </em>
+                  {% endif %}
+                </small>
+              </p>
+            </li>
+            {% endfor %}
+          </ul>
+          <p class="hasil">
+            <strong>Hasil: </strong>
+            <span class="result-text">{{ result }}</span>
+          </p>
+          {% if accuracy %}
+          <p class="hasil">
+            <strong>Persentase Akurasi: {{ confidence }}%</strong>
+          </p>
+          {% endif %}
+
+          <p>
+            {% if result == 'Website ini terindikasi Phishing' %} Website ini
+            terindikasi phishing karena beberapa ciri khas berikut:
+          </p>
+          <ul>
+            {% if features['Shortening_Service'] %}
+            <li>
+              URL menggunakan layanan pemendek URL yang umum digunakan oleh
+              penyerang.
+            </li>
+            {% endif %} {% if features['Contains_Malicious_Words'] %}
+            <li>
+              URL mengandung kata-kata berbahaya seperti 'login' atau 'verify'
+              yang sering digunakan dalam phishing.
+            </li>
+            {% endif %} {% if features['Subdomain_Count'] %}
+            <li>
+              URL memiliki banyak subdomain yang sering digunakan dalam upaya
+              phishing.
+            </li>
+            {% endif %} {% if features['Contains_Suspicious_TLDs'] %}
+            <li>
+              URL memiliki TLD mencurigakan yang sering digunakan dalam
+              phishing.
+            </li>
+            {% endif %}
+          </ul>
+          {% else %}
+          <p>
+            Website ini tidak terindikasi phishing berdasarkan hasil
+            identifikasi karena alasan-alasan berikut:
+          </p>
+          <ul>
+            <li>
+              URL tidak menggunakan layanan pemendek URL yang mencurigakan.
+            </li>
+            <li>
+              URL tidak mengandung kata-kata berbahaya seperti 'login' atau
+              'verify'.
+            </li>
+            <li>URL memiliki jumlah subdomain yang normal.</li>
+            <li>URL menggunakan TLD yang umum dan tidak mencurigakan.</li>
+          </ul>
+          <p>
+            Namun, tetap berhati-hati saat mengunjungi situs yang tidak dikenal.
+          </p>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
